@@ -3,6 +3,8 @@ package app.rental.projet_3.controllers;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -37,7 +39,7 @@ public class RentalController {
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public RentalEntity createRental(@RequestBody RentalRequestDto rentalRequest) {
-		return rentalService.createRental(rentalRequest);
+	public RentalEntity createRental(@RequestBody RentalRequestDto rentalRequest, @AuthenticationPrincipal Jwt jwt) {
+		return rentalService.createRental(rentalRequest, jwt.getSubject());
 	}
 }
