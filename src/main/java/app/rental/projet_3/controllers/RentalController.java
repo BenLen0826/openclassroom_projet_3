@@ -16,7 +16,7 @@ import app.rental.projet_3.entities.RentalEntity;
 import app.rental.projet_3.services.RentalService;
 
 @RestController
-@RequestMapping("/rentals")
+@RequestMapping("/api/rentals")
 public class RentalController {
 
 	private final RentalService rentalService;
