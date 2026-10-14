@@ -1,12 +1,13 @@
 package app.rental.projet_3.services;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import app.rental.projet_3.dto.RentalRequestDto;
+import app.rental.projet_3.dto.RentalDto;
 import app.rental.projet_3.entities.RentalEntity;
 import app.rental.projet_3.entities.UserEntity;
 import app.rental.projet_3.repositories.RentalRepository;
@@ -24,27 +25,34 @@ public class RentalService {
 		this.userRepository = userRepository;
 	}
 
-	public List<RentalEntity> getAllRentals() {
-		return rentalRepository.findAll();
+	public List<RentalDto.RentalOutput> getAllRentals() {
+		List<RentalDto.RentalOutput> rentals = new ArrayList<>();
+		for (RentalEntity rental : rentalRepository.findAll()) {
+			rentals.add(RentalDto.RentalOutput.fromEntity(rental));
+		}
+		return rentals;
 	}
 
-	public RentalEntity getRentalById(Integer id) {
-		return rentalRepository.findById(id)
+	public RentalDto.RentalOutput getRentalById(Integer id) {
+		RentalEntity rental = rentalRepository.findById(id)
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Rental not found"));
+
+		return RentalDto.RentalOutput.fromEntity(rental);
 	}
 
-	public RentalEntity createRental(RentalRequestDto rentalRequest, String ownerEmail) {
+	public RentalDto.RentalOutput createRental(RentalDto.RentalInput input, String ownerEmail) {
 		UserEntity owner = userRepository.findByEmail(ownerEmail)
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
 
 		RentalEntity rental = new RentalEntity();
-		rental.setName(rentalRequest.getName());
-		rental.setSurface(rentalRequest.getSurface());
-		rental.setPrice(rentalRequest.getPrice());
-		rental.setPicture(rentalRequest.getPicture());
-		rental.setDescription(rentalRequest.getDescription());
+		rental.setName(input.name());
+		rental.setSurface(input.surface());
+		rental.setPrice(input.price());
+		rental.setPicture(input.picture());
+		rental.setDescription(input.description());
 		// Le proprietaire vient du token, jamais du JSON : sinon on pourrait creer une location au nom d'un autre
 		rental.setOwnerId(owner.getId());
-		return rentalRepository.save(rental);
+
+		return RentalDto.RentalOutput.fromEntity(rentalRepository.save(rental));
 	}
 }

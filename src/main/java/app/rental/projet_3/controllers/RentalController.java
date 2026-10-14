@@ -13,8 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import app.rental.projet_3.dto.RentalRequestDto;
-import app.rental.projet_3.entities.RentalEntity;
+import app.rental.projet_3.dto.RentalDto;
 import app.rental.projet_3.services.RentalService;
 
 @RestController
@@ -28,18 +27,19 @@ public class RentalController {
 	}
 
 	@GetMapping
-	public List<RentalEntity> getAllRentals() {
+	public List<RentalDto.RentalOutput> getAllRentals() {
 		return rentalService.getAllRentals();
 	}
 
 	@GetMapping("/{id}")
-	public RentalEntity getRentalById(@PathVariable Integer id) {
+	public RentalDto.RentalOutput getRentalById(@PathVariable Integer id) {
 		return rentalService.getRentalById(id);
 	}
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public RentalEntity createRental(@RequestBody RentalRequestDto rentalRequest, @AuthenticationPrincipal Jwt jwt) {
-		return rentalService.createRental(rentalRequest, jwt.getSubject());
+	public RentalDto.RentalOutput createRental(@RequestBody RentalDto.RentalInput input,
+			@AuthenticationPrincipal Jwt jwt) {
+		return rentalService.createRental(input, jwt.getSubject());
 	}
 }
