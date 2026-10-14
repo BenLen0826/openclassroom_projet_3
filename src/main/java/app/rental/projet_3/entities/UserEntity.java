@@ -20,10 +20,14 @@ public class UserEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 
+	@Column(nullable = false, unique = true)
 	private String email;
 
+	@Column(nullable = false)
 	private String name;
 
+	// Hash BCrypt, jamais le mot de passe en clair
+	@Column(nullable = false)
 	private String password;
 
 	@CreationTimestamp
