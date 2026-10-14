@@ -6,16 +6,20 @@ import java.time.LocalDateTime;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import app.rental.projet_3.entities.RentalEntity;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
 
 public class RentalDto {
 
 	// Pas d'ownerId : le proprietaire est l'utilisateur du token
 	public record RentalInput(
-			String name,
-			BigDecimal surface,
-			BigDecimal price,
+			@NotBlank String name,
+			@NotNull @Positive BigDecimal surface,
+			@NotNull @Positive BigDecimal price,
 			String picture,
-			String description) {
+			@Size(max = 2000) String description) {
 	}
 
 	public record RentalOutput(

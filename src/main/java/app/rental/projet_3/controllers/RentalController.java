@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import app.rental.projet_3.dto.RentalDto;
 import app.rental.projet_3.services.RentalService;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/rentals")
@@ -38,7 +39,7 @@ public class RentalController {
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public RentalDto.RentalOutput createRental(@RequestBody RentalDto.RentalInput input,
+	public RentalDto.RentalOutput createRental(@Valid @RequestBody RentalDto.RentalInput input,
 			@AuthenticationPrincipal Jwt jwt) {
 		return rentalService.createRental(input, jwt.getSubject());
 	}

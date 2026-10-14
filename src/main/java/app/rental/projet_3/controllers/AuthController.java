@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import app.rental.projet_3.dto.AuthDto;
 import app.rental.projet_3.dto.UserDto;
 import app.rental.projet_3.services.AuthService;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -23,12 +24,12 @@ public class AuthController {
 	}
 
 	@PostMapping("/register")
-	public AuthDto.TokenOutput register(@RequestBody AuthDto.RegisterInput input) {
+	public AuthDto.TokenOutput register(@Valid @RequestBody AuthDto.RegisterInput input) {
 		return authService.register(input);
 	}
 
 	@PostMapping("/login")
-	public AuthDto.TokenOutput login(@RequestBody AuthDto.LoginInput input) {
+	public AuthDto.TokenOutput login(@Valid @RequestBody AuthDto.LoginInput input) {
 		return authService.login(input);
 	}
 
