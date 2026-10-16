@@ -8,6 +8,7 @@ import javax.crypto.spec.SecretKeySpec;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -27,6 +28,8 @@ import org.springframework.security.web.SecurityFilterChain;
 
 import com.nimbusds.jose.jwk.source.ImmutableSecret;
 
+import app.rental.projet_3.services.ImageStorageService;
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -43,6 +46,8 @@ public class SecurityConfig {
 						.requestMatchers("/api/auth/register", "/api/auth/login").permitAll()
 						// Sans ca, une erreur sur une route publique serait transformee en 401 sans message
 						.requestMatchers("/error").permitAll()
+						// Une balise <img> n'envoie pas le token : lecture seule des images sans connexion
+						.requestMatchers(HttpMethod.GET, ImageStorageService.URL_PATH + "**").permitAll()
 						.anyRequest().authenticated())
 				.oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))
 				.build();
