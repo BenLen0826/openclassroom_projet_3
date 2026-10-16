@@ -1,16 +1,17 @@
 package app.rental.projet_3.services;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import app.rental.projet_3.dto.AuthDto;
 import app.rental.projet_3.dto.UserDto;
 import app.rental.projet_3.entities.UserEntity;
+import app.rental.projet_3.exceptions.InvalidCredentialsException;
+import app.rental.projet_3.exceptions.ResourceAlreadyExistsException;
+import app.rental.projet_3.exceptions.ResourceNotFoundException;
 import app.rental.projet_3.repositories.UserRepository;
 
 @Service
@@ -34,7 +35,7 @@ public class AuthService {
 
 	public AuthDto.TokenOutput register(AuthDto.RegisterInput input) {
 		if (userRepository.existsByEmail(input.email())) {
-			throw new ResponseStatusException(HttpStatus.CONFLICT, "Email already used");
+			throw new ResourceAlreadyExistsException("Email already used");
 		}
 
 		UserEntity user = new UserEntity();
@@ -53,7 +54,7 @@ public class AuthService {
 		} catch (AuthenticationException e) {
 			// Meme erreur pour un email inconnu ou un mauvais mot de passe :
 			// on ne revele pas quels emails ont un compte
-			throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid email or password");
+			throw new InvalidCredentialsException("Invalid email or password");
 		}
 
 		return new AuthDto.TokenOutput(jwtService.generateToken(input.email()));
@@ -61,7 +62,7 @@ public class AuthService {
 
 	public UserDto.UserOutput me(String email) {
 		UserEntity user = userRepository.findByEmail(email)
-				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+				.orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
 		return UserDto.UserOutput.fromEntity(user);
 	}

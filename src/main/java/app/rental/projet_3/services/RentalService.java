@@ -3,13 +3,12 @@ package app.rental.projet_3.services;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 import app.rental.projet_3.dto.RentalDto;
 import app.rental.projet_3.entities.RentalEntity;
 import app.rental.projet_3.entities.UserEntity;
+import app.rental.projet_3.exceptions.ResourceNotFoundException;
 import app.rental.projet_3.repositories.RentalRepository;
 import app.rental.projet_3.repositories.UserRepository;
 
@@ -35,14 +34,14 @@ public class RentalService {
 
 	public RentalDto.RentalOutput getRentalById(Integer id) {
 		RentalEntity rental = rentalRepository.findById(id)
-				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Rental not found"));
+				.orElseThrow(() -> new ResourceNotFoundException("Rental not found"));
 
 		return RentalDto.RentalOutput.fromEntity(rental);
 	}
 
 	public RentalDto.RentalOutput createRental(RentalDto.RentalInput input, String ownerEmail) {
 		UserEntity owner = userRepository.findByEmail(ownerEmail)
-				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+				.orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
 		RentalEntity rental = new RentalEntity();
 		rental.setName(input.name());
