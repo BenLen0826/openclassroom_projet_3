@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import app.rental.projet_3.dto.RentalDto.RentalInput;
 import app.rental.projet_3.dto.RentalDto.RentalOutput;
@@ -20,9 +21,13 @@ public class RentalService {
 
 	private final UserRepository userRepository;
 
-	public RentalService(RentalRepository rentalRepository, UserRepository userRepository) {
+	private final ImageStorageService imageStorageService;
+
+	public RentalService(RentalRepository rentalRepository, UserRepository userRepository,
+			ImageStorageService imageStorageService) {
 		this.rentalRepository = rentalRepository;
 		this.userRepository = userRepository;
+		this.imageStorageService = imageStorageService;
 	}
 
 	public List<RentalOutput> getAllRentals() {
@@ -48,8 +53,14 @@ public class RentalService {
 		rental.setName(input.name());
 		rental.setSurface(input.surface());
 		rental.setPrice(input.price());
-		// En attente du stockage de l'image : picture est un fichier, l'entite attend son URL
-		// rental.setPicture(input.picture());
+		String filename = imageStorageService.save(input.picture());
+
+		String pictureUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
+				.path(ImageStorageService.URL_PATH)
+				.path(filename)
+				.toUriString();
+
+		rental.setPicture(pictureUrl);
 		rental.setDescription(input.description());
 		// Le proprietaire vient du token, jamais du JSON : sinon on pourrait creer une location au nom d'un autre
 		rental.setOwnerId(owner.getId());
