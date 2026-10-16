@@ -35,6 +35,11 @@ public class GlobalExceptionHandler {
 		return ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, e.getMessage());
 	}
 
+	@ExceptionHandler(InvalidFileException.class)
+	public ProblemDetail handleInvalidFile(InvalidFileException e) {
+		return ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, e.getMessage());
+	}
+
 	@ExceptionHandler(Exception.class)
 	public ProblemDetail handleOther(Exception e) {
 		log.error("Erreur inattendue", e);
