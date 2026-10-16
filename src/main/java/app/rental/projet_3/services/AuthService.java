@@ -6,8 +6,10 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import app.rental.projet_3.dto.AuthDto;
-import app.rental.projet_3.dto.UserDto;
+import app.rental.projet_3.dto.AuthDto.LoginInput;
+import app.rental.projet_3.dto.AuthDto.RegisterInput;
+import app.rental.projet_3.dto.AuthDto.TokenOutput;
+import app.rental.projet_3.dto.UserDto.UserOutput;
 import app.rental.projet_3.entities.UserEntity;
 import app.rental.projet_3.exceptions.InvalidCredentialsException;
 import app.rental.projet_3.exceptions.ResourceAlreadyExistsException;
@@ -33,7 +35,7 @@ public class AuthService {
 		this.jwtService = jwtService;
 	}
 
-	public AuthDto.TokenOutput register(AuthDto.RegisterInput input) {
+	public TokenOutput register(RegisterInput input) {
 		if (userRepository.existsByEmail(input.email())) {
 			throw new ResourceAlreadyExistsException("Email already used");
 		}
@@ -44,10 +46,10 @@ public class AuthService {
 		user.setPassword(passwordEncoder.encode(input.password()));
 		userRepository.save(user);
 
-		return new AuthDto.TokenOutput(jwtService.generateToken(user.getEmail()));
+		return new TokenOutput(jwtService.generateToken(user.getEmail()));
 	}
 
-	public AuthDto.TokenOutput login(AuthDto.LoginInput input) {
+	public TokenOutput login(LoginInput input) {
 		try {
 			authenticationManager.authenticate(
 					UsernamePasswordAuthenticationToken.unauthenticated(input.email(), input.password()));
@@ -57,13 +59,13 @@ public class AuthService {
 			throw new InvalidCredentialsException("Invalid email or password");
 		}
 
-		return new AuthDto.TokenOutput(jwtService.generateToken(input.email()));
+		return new TokenOutput(jwtService.generateToken(input.email()));
 	}
 
-	public UserDto.UserOutput me(String email) {
+	public UserOutput me(String email) {
 		UserEntity user = userRepository.findByEmail(email)
 				.orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
-		return UserDto.UserOutput.fromEntity(user);
+		return UserOutput.fromEntity(user);
 	}
 }

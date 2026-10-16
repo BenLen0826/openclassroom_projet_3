@@ -8,8 +8,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import app.rental.projet_3.dto.AuthDto;
-import app.rental.projet_3.dto.UserDto;
+import app.rental.projet_3.dto.AuthDto.LoginInput;
+import app.rental.projet_3.dto.AuthDto.RegisterInput;
+import app.rental.projet_3.dto.AuthDto.TokenOutput;
+import app.rental.projet_3.dto.UserDto.UserOutput;
 import app.rental.projet_3.services.AuthService;
 import jakarta.validation.Valid;
 
@@ -24,17 +26,17 @@ public class AuthController {
 	}
 
 	@PostMapping("/register")
-	public AuthDto.TokenOutput register(@Valid @RequestBody AuthDto.RegisterInput input) {
+	public TokenOutput register(@Valid @RequestBody RegisterInput input) {
 		return authService.register(input);
 	}
 
 	@PostMapping("/login")
-	public AuthDto.TokenOutput login(@Valid @RequestBody AuthDto.LoginInput input) {
+	public TokenOutput login(@Valid @RequestBody LoginInput input) {
 		return authService.login(input);
 	}
 
 	@GetMapping("/me")
-	public UserDto.UserOutput me(@AuthenticationPrincipal Jwt jwt) {
+	public UserOutput me(@AuthenticationPrincipal Jwt jwt) {
 		return authService.me(jwt.getSubject());
 	}
 }
