@@ -1,7 +1,5 @@
 package app.rental.projet_3.controllers;
 
-import java.util.List;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -15,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import app.rental.projet_3.dto.RentalDto.RentalInput;
+import app.rental.projet_3.dto.RentalDto.RentalListOutput;
 import app.rental.projet_3.dto.RentalDto.RentalOutput;
 import app.rental.projet_3.services.RentalService;
 import jakarta.validation.Valid;
@@ -30,8 +29,8 @@ public class RentalController {
 	}
 
 	@GetMapping
-	public List<RentalOutput> getAllRentals() {
-		return rentalService.getAllRentals();
+	public RentalListOutput getAllRentals() {
+		return new RentalListOutput(rentalService.getAllRentals());
 	}
 
 	@GetMapping("/{id}")

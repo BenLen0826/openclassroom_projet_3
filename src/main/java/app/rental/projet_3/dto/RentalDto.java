@@ -2,9 +2,11 @@ package app.rental.projet_3.dto;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import app.rental.projet_3.entities.RentalEntity;
@@ -32,8 +34,8 @@ public class RentalDto {
 			String picture,
 			String description,
 			@JsonProperty("owner_id") Integer ownerId,
-			@JsonProperty("created_at") LocalDateTime createdAt,
-			@JsonProperty("updated_at") LocalDateTime updatedAt) {
+			@JsonProperty("created_at") @JsonFormat(pattern = "yyyy/MM/dd") LocalDateTime createdAt,
+			@JsonProperty("updated_at") @JsonFormat(pattern = "yyyy/MM/dd") LocalDateTime updatedAt) {
 
 		public static RentalOutput fromEntity(RentalEntity rental) {
 			return new RentalOutput(
@@ -47,5 +49,8 @@ public class RentalDto {
 					rental.getCreatedAt(),
 					rental.getUpdatedAt());
 		}
+	}
+
+	public record RentalListOutput(List<RentalOutput> rentals) {
 	}
 }
