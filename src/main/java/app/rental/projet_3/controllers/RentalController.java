@@ -3,12 +3,13 @@ package app.rental.projet_3.controllers;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -37,9 +38,9 @@ public class RentalController {
 		return rentalService.getRentalById(id);
 	}
 
-	@PostMapping
+	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	@ResponseStatus(HttpStatus.CREATED)
-	public RentalDto.RentalOutput createRental(@Valid @RequestBody RentalDto.RentalInput input,
+	public RentalDto.RentalOutput createRental(@Valid @ModelAttribute RentalDto.RentalInput input,
 			@AuthenticationPrincipal Jwt jwt) {
 		return rentalService.createRental(input, jwt.getSubject());
 	}

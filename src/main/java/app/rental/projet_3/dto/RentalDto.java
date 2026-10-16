@@ -3,6 +3,8 @@ package app.rental.projet_3.dto;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import app.rental.projet_3.entities.RentalEntity;
@@ -18,7 +20,7 @@ public class RentalDto {
 			@NotBlank String name,
 			@NotNull @Positive BigDecimal surface,
 			@NotNull @Positive BigDecimal price,
-			String picture,
+			@NotNull MultipartFile picture,
 			@Size(max = 2000) String description) {
 	}
 

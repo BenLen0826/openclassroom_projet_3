@@ -47,7 +47,8 @@ public class RentalService {
 		rental.setName(input.name());
 		rental.setSurface(input.surface());
 		rental.setPrice(input.price());
-		rental.setPicture(input.picture());
+		// En attente du stockage de l'image : picture est un fichier, l'entite attend son URL
+		// rental.setPicture(input.picture());
 		rental.setDescription(input.description());
 		// Le proprietaire vient du token, jamais du JSON : sinon on pourrait creer une location au nom d'un autre
 		rental.setOwnerId(owner.getId());
