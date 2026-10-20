@@ -48,7 +48,7 @@ public class RentalService {
 		return RentalOutput.fromEntity(rental);
 	}
 
-	public RentalOutput createRental(RentalInput input, String ownerEmail) {
+	public MessageResponse createRental(RentalInput input, String ownerEmail) {
 		UserEntity owner = userRepository.findByEmail(ownerEmail)
 				.orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
@@ -68,7 +68,9 @@ public class RentalService {
 		// Le proprietaire vient du token, jamais du JSON : sinon on pourrait creer une location au nom d'un autre
 		rental.setOwnerId(owner.getId());
 
-		return RentalOutput.fromEntity(rentalRepository.save(rental));
+		rentalRepository.save(rental);
+
+		return new MessageResponse("Rental created !");
 	}
 
 	public MessageResponse updateRental(Integer id, RentalUpdateInput input, String userEmail) {
