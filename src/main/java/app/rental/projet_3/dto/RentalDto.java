@@ -10,6 +10,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import app.rental.projet_3.entities.RentalEntity;
+import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -19,17 +20,17 @@ public class RentalDto {
 
 	// Pas d'ownerId : le proprietaire est l'utilisateur du token
 	public record RentalInput(
-			@NotBlank String name,
-			@NotNull @Positive BigDecimal surface,
-			@NotNull @Positive BigDecimal price,
+			@NotBlank @Size(max = 255) String name,
+			@NotNull @Positive @Digits(integer = 10, fraction = 0) BigDecimal surface,
+			@NotNull @Positive @Digits(integer = 10, fraction = 0) BigDecimal price,
 			@NotNull MultipartFile picture,
 			@Size(max = 2000) String description) {
 	}
 
 	public record RentalUpdateInput(
-			@NotBlank String name,
-			@NotNull @Positive BigDecimal surface,
-			@NotNull @Positive BigDecimal price,
+			@NotBlank @Size(max = 255) String name,
+			@NotNull @Positive @Digits(integer = 10, fraction = 0) BigDecimal surface,
+			@NotNull @Positive @Digits(integer = 10, fraction = 0) BigDecimal price,
 			@Size(max = 2000) String description) {
 	}
 
