@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import app.rental.projet_3.dto.RentalDto.RentalInput;
 import app.rental.projet_3.dto.RentalDto.RentalListOutput;
 import app.rental.projet_3.dto.RentalDto.RentalOutput;
+import app.rental.projet_3.dto.RentalDto.RentalUpdateInput;
+import app.rental.projet_3.dto.ResponseDto.MessageResponse;
 import app.rental.projet_3.services.RentalService;
 import jakarta.validation.Valid;
 
@@ -43,5 +46,12 @@ public class RentalController {
 	public RentalOutput createRental(@Valid @ModelAttribute RentalInput input,
 			@AuthenticationPrincipal Jwt jwt) {
 		return rentalService.createRental(input, jwt.getSubject());
+	}
+
+	@PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public MessageResponse updateRental(@PathVariable Integer id,
+			@Valid @ModelAttribute RentalUpdateInput input,
+			@AuthenticationPrincipal Jwt jwt) {
+		return rentalService.updateRental(id, input, jwt.getSubject());
 	}
 }

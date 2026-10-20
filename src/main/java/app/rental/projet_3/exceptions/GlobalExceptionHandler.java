@@ -40,6 +40,11 @@ public class GlobalExceptionHandler {
 		return ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, e.getMessage());
 	}
 
+	@ExceptionHandler(NotResourceOwnerException.class)
+	public ProblemDetail handleNotResourceOwner(NotResourceOwnerException e) {
+		return ProblemDetail.forStatusAndDetail(HttpStatus.FORBIDDEN, e.getMessage());
+	}
+
 	@ExceptionHandler(Exception.class)
 	public ProblemDetail handleOther(Exception e) {
 		log.error("Erreur inattendue", e);

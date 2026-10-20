@@ -26,6 +26,13 @@ public class RentalDto {
 			@Size(max = 2000) String description) {
 	}
 
+	public record RentalUpdateInput(
+			@NotBlank String name,
+			@NotNull @Positive BigDecimal surface,
+			@NotNull @Positive BigDecimal price,
+			@Size(max = 2000) String description) {
+	}
+
 	public record RentalOutput(
 			Integer id,
 			String name,

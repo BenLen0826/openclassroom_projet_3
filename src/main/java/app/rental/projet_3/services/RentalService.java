@@ -8,8 +8,11 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import app.rental.projet_3.dto.RentalDto.RentalInput;
 import app.rental.projet_3.dto.RentalDto.RentalOutput;
+import app.rental.projet_3.dto.RentalDto.RentalUpdateInput;
+import app.rental.projet_3.dto.ResponseDto.MessageResponse;
 import app.rental.projet_3.entities.RentalEntity;
 import app.rental.projet_3.entities.UserEntity;
+import app.rental.projet_3.exceptions.NotResourceOwnerException;
 import app.rental.projet_3.exceptions.ResourceNotFoundException;
 import app.rental.projet_3.repositories.RentalRepository;
 import app.rental.projet_3.repositories.UserRepository;
@@ -66,5 +69,25 @@ public class RentalService {
 		rental.setOwnerId(owner.getId());
 
 		return RentalOutput.fromEntity(rentalRepository.save(rental));
+	}
+
+	public MessageResponse updateRental(Integer id, RentalUpdateInput input, String userEmail) {
+		RentalEntity rental = rentalRepository.findById(id)
+				.orElseThrow(() -> new ResourceNotFoundException("Rental not found"));
+
+		UserEntity user = userRepository.findByEmail(userEmail)
+				.orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+		if (!rental.getOwnerId().equals(user.getId())) {
+			throw new NotResourceOwnerException("You are not the owner of this rental");
+		}
+
+		rental.setName(input.name());
+		rental.setSurface(input.surface());
+		rental.setPrice(input.price());
+		rental.setDescription(input.description());
+		rentalRepository.save(rental);
+
+		return new MessageResponse("Rental updated !");
 	}
 }
