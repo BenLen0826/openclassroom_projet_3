@@ -2,6 +2,7 @@ package app.rental.projet_3.dto;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import app.rental.projet_3.entities.UserEntity;
@@ -12,8 +13,8 @@ public class UserDto {
 			Integer id,
 			String name,
 			String email,
-			@JsonProperty("created_at") LocalDateTime createdAt,
-			@JsonProperty("updated_at") LocalDateTime updatedAt) {
+			@JsonProperty("created_at") @JsonFormat(pattern = "yyyy/MM/dd") LocalDateTime createdAt,
+			@JsonProperty("updated_at") @JsonFormat(pattern = "yyyy/MM/dd") LocalDateTime updatedAt) {
 
 		public static UserOutput fromEntity(UserEntity user) {
 			return new UserOutput(
