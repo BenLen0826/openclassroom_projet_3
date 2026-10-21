@@ -1,7 +1,5 @@
 package app.rental.projet_3.controllers;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,6 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 import app.rental.projet_3.dto.MessageDto.MessageInput;
 import app.rental.projet_3.dto.ResponseDto.MessageResponse;
 import app.rental.projet_3.services.MessageService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 @RestController

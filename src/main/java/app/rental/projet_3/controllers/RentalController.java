@@ -1,7 +1,5 @@
 package app.rental.projet_3.controllers;
 
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -19,6 +17,8 @@ import app.rental.projet_3.dto.RentalDto.RentalOutput;
 import app.rental.projet_3.dto.RentalDto.RentalUpdateInput;
 import app.rental.projet_3.dto.ResponseDto.MessageResponse;
 import app.rental.projet_3.services.RentalService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 @RestController
