@@ -1,5 +1,7 @@
 package app.rental.projet_3.controllers;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -21,6 +23,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/api/rentals")
+@Tag(name = "Rentals", description = "Gestion des locations")
 public class RentalController {
 
 	private final RentalService rentalService;
@@ -30,22 +33,26 @@ public class RentalController {
 	}
 
 	@GetMapping
+	@Operation(summary = "Récupérer toutes les locations")
 	public RentalListOutput getAllRentals() {
 		return new RentalListOutput(rentalService.getAllRentals());
 	}
 
 	@GetMapping("/{id}")
+	@Operation(summary = "Récupérer une location par son ID")
 	public RentalOutput getRentalById(@PathVariable Integer id) {
 		return rentalService.getRentalById(id);
 	}
 
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	@Operation(summary = "Créer une nouvelle location")
 	public MessageResponse createRental(@Valid @ModelAttribute RentalInput input,
 			@AuthenticationPrincipal Jwt jwt) {
 		return rentalService.createRental(input, jwt.getSubject());
 	}
 
 	@PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	@Operation(summary = "Mettre à jour une location existante")
 	public MessageResponse updateRental(@PathVariable Integer id,
 			@Valid @ModelAttribute RentalUpdateInput input,
 			@AuthenticationPrincipal Jwt jwt) {
