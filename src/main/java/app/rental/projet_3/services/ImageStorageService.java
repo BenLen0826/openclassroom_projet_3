@@ -48,7 +48,7 @@ public class ImageStorageService {
 		String contentType = file.getContentType();
 		String extension = StringUtils.getFilenameExtension(file.getOriginalFilename());
 
-		// Vérifications du type/extention/contenu de l'image
+		// Vérification du type MIME et de l'extension (le contenu du fichier n'est pas analysé)
 		if (contentType == null || extension == null
 				|| !ALLOWED_CONTENT_TYPES.contains(contentType)
 				|| !ALLOWED_EXTENSIONS.contains(extension.toLowerCase())) {

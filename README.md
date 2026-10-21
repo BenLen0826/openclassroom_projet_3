@@ -135,8 +135,12 @@ Pour tester les routes protégées :
 
 ## Routes de l'API
 
-Toutes les routes, sauf `register` et `login`, nécessitent un token JWT dans l'en-tête
-`Authorization: Bearer <token>`.
+Les routes `register` et `login` sont publiques. Toutes les autres routes de l'API nécessitent
+un token JWT dans l'en-tête `Authorization: Bearer <token>`.
+
+Sont aussi accessibles sans token :
+- la documentation Swagger (`/swagger-ui/index.html` et `/v3/api-docs`) ;
+- les images des locations (`/uploads/...`), en lecture seule, pour qu'elles s'affichent dans le navigateur.
 
 | Méthode | Route | Description |
 |---|---|---|

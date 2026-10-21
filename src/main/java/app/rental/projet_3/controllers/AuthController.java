@@ -14,6 +14,7 @@ import app.rental.projet_3.dto.AuthDto.TokenOutput;
 import app.rental.projet_3.dto.UserDto.UserOutput;
 import app.rental.projet_3.services.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
@@ -36,6 +37,7 @@ public class AuthController {
 	 */
 	@PostMapping("/register")
 	@Operation(summary = "Créer un compte et récupérer un token JWT")
+	@SecurityRequirements
 	public TokenOutput register(@Valid @RequestBody RegisterInput input) {
 		return authService.register(input);
 	}
@@ -48,6 +50,7 @@ public class AuthController {
 	 */
 	@PostMapping("/login")
 	@Operation(summary = "Se connecter et récupérer un token JWT")
+	@SecurityRequirements
 	public TokenOutput login(@Valid @RequestBody LoginInput input) {
 		return authService.login(input);
 	}
