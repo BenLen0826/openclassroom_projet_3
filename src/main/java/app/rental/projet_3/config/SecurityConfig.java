@@ -25,6 +25,8 @@ import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
+import org.springframework.security.oauth2.server.resource.web.BearerTokenResolver;
+import org.springframework.security.oauth2.server.resource.web.DefaultBearerTokenResolver;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -55,8 +57,24 @@ public class SecurityConfig {
 						.requestMatchers(HttpMethod.GET, ImageStorageService.URL_PATH + "**").permitAll()
 						.requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
 						.anyRequest().authenticated())
-				.oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))
+				.oauth2ResourceServer(oauth2 -> oauth2
+						.bearerTokenResolver(bearerTokenResolver())
+						.jwt(Customizer.withDefaults()))
 				.build();
+	}
+
+	// Sur les routes publiques, le token est ignore : sinon un token expire bloquerait le login (401)
+	private BearerTokenResolver bearerTokenResolver() {
+		DefaultBearerTokenResolver defaultResolver = new DefaultBearerTokenResolver();
+
+		return request -> {
+			String path = request.getRequestURI();
+			if (path.equals("/api/auth/register") || path.equals("/api/auth/login")
+					|| path.startsWith("/swagger-ui") || path.startsWith("/v3/api-docs")) {
+				return null;
+			}
+			return defaultResolver.resolve(request);
+		};
 	}
 
 	@Bean
