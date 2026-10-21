@@ -84,6 +84,8 @@ cp .env.example .env
 Puis remplir le fichier `.env` :
 
 ```properties
+DB_HOST=localhost
+DB_PORT=3306
 DB_USERNAME=chatop_user
 DB_PASSWORD=mot_de_passe
 JWT_SECRET=une_cle_secrete_d_au_moins_32_caracteres
@@ -91,9 +93,14 @@ JWT_SECRET=une_cle_secrete_d_au_moins_32_caracteres
 
 | Variable | Description |
 |---|---|
+| `DB_HOST` | Adresse du serveur MySQL. `localhost` si MySQL est installé sur la même machine |
+| `DB_PORT` | Port de MySQL. `3306` par défaut ; à adapter si besoin (WAMP ou MAMP utilisent parfois `3307` ou `8889`) |
 | `DB_USERNAME` | Utilisateur MySQL créé à l'étape 2 (`chatop_user`) |
 | `DB_PASSWORD` | Son mot de passe |
 | `JWT_SECRET` | Clé utilisée pour signer les tokens JWT. **Au moins 32 caractères**, sinon l'inscription et la connexion renvoient une erreur 500 |
+
+`DB_HOST` et `DB_PORT` sont facultatifs : s'ils sont absents du `.env`, l'application utilise `localhost` et `3306`.
+Attention à ne pas les laisser vides (`DB_PORT=`) : une valeur vide ne remplace pas la valeur par défaut.
 
 ## Lancement
 
