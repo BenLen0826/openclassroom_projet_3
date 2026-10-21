@@ -31,6 +31,15 @@ public class ImageStorageService {
 		this.uploadDir = Path.of(uploadDir);
 	}
 
+	/**
+	 * Vérifie que le fichier est une image autorisée (JPEG, PNG, GIF ou WEBP),
+	 * puis l'enregistre dans le dossier d'upload sous un nom unique.
+	 *
+	 * @param file l'image envoyée dans le formulaire
+	 * @return le nom du fichier enregistré
+	 * @throws InvalidFileException si le fichier est vide ou n'est pas une image autorisée (400)
+	 * @throws StorageException si le fichier ne peut pas être écrit sur le disque (500)
+	 */
 	public String save(MultipartFile file) {
 		if (file.isEmpty()) {
 			throw new InvalidFileException("Picture is empty");

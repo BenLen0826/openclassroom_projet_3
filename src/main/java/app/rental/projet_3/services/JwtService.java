@@ -21,6 +21,12 @@ public class JwtService {
 		this.jwtEncoder = jwtEncoder;
 	}
 
+	/**
+	 * Génère un token JWT signé en HS256, valable 24 heures.
+	 *
+	 * @param email l'email de l'utilisateur, stocké dans le "subject" du token
+	 * @return le token JWT
+	 */
 	public String generateToken(String email) {
 		Instant now = Instant.now();
 

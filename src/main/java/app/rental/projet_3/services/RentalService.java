@@ -33,6 +33,11 @@ public class RentalService {
 		this.imageStorageService = imageStorageService;
 	}
 
+	/**
+	 * Récupère toutes les locations et les convertit en DTO.
+	 *
+	 * @return la liste des locations
+	 */
 	public List<RentalOutput> getAllRentals() {
 		List<RentalOutput> rentals = new ArrayList<>();
 		for (RentalEntity rental : rentalRepository.findAll()) {
@@ -41,6 +46,13 @@ public class RentalService {
 		return rentals;
 	}
 
+	/**
+	 * Récupère une location à partir de son id.
+	 *
+	 * @param id l'id de la location
+	 * @return la location
+	 * @throws ResourceNotFoundException si la location n'existe pas (404)
+	 */
 	public RentalOutput getRentalById(Integer id) {
 		RentalEntity rental = rentalRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Rental not found"));
@@ -48,6 +60,15 @@ public class RentalService {
 		return RentalOutput.fromEntity(rental);
 	}
 
+	/**
+	 * Crée une location : enregistre l'image sur le disque, puis la location en base
+	 * avec l'URL complète de l'image.
+	 *
+	 * @param input les champs du formulaire, dont l'image
+	 * @param ownerEmail l'email de l'utilisateur connecté, qui devient le propriétaire
+	 * @return un message de confirmation
+	 * @throws ResourceNotFoundException si l'utilisateur n'existe plus (404)
+	 */
 	public MessageResponse createRental(RentalInput input, String ownerEmail) {
 		UserEntity owner = userRepository.findByEmail(ownerEmail)
 				.orElseThrow(() -> new ResourceNotFoundException("User not found"));
@@ -73,6 +94,17 @@ public class RentalService {
 		return new MessageResponse("Rental created !");
 	}
 
+	/**
+	 * Modifie une location après avoir vérifié que l'utilisateur en est le propriétaire.
+	 * L'image n'est pas modifiable.
+	 *
+	 * @param id l'id de la location
+	 * @param input les nouveaux champs du formulaire
+	 * @param userEmail l'email de l'utilisateur connecté
+	 * @return un message de confirmation
+	 * @throws ResourceNotFoundException si la location ou l'utilisateur n'existe pas (404)
+	 * @throws NotResourceOwnerException si l'utilisateur n'est pas le propriétaire (403)
+	 */
 	public MessageResponse updateRental(Integer id, RentalUpdateInput input, String userEmail) {
 		RentalEntity rental = rentalRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("Rental not found"));

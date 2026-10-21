@@ -21,6 +21,12 @@ public class UserController {
 		this.userService = userService;
 	}
 
+	/**
+	 * Récupère un utilisateur à partir de son id.
+	 *
+	 * @param id l'id de l'utilisateur
+	 * @return l'utilisateur, sans son mot de passe (erreur 404 s'il n'existe pas)
+	 */
 	@GetMapping("/{id}")
 	@Operation(summary = "Récupérer un utilisateur par son ID")
 	public UserOutput getUserById(@PathVariable Integer id) {

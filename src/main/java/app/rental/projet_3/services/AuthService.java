@@ -35,6 +35,13 @@ public class AuthService {
 		this.jwtService = jwtService;
 	}
 
+	/**
+	 * Crée un utilisateur avec un mot de passe haché en BCrypt.
+	 *
+	 * @param input email, nom et mot de passe du nouvel utilisateur
+	 * @return un token JWT pour le nouvel utilisateur
+	 * @throws ResourceAlreadyExistsException si l'email est déjà utilisé (409)
+	 */
 	public TokenOutput register(RegisterInput input) {
 		if (userRepository.existsByEmail(input.email())) {
 			throw new ResourceAlreadyExistsException("Email already used");
@@ -49,6 +56,13 @@ public class AuthService {
 		return new TokenOutput(jwtService.generateToken(user.getEmail()));
 	}
 
+	/**
+	 * Vérifie l'email et le mot de passe avec Spring Security, puis génère un token.
+	 *
+	 * @param input email et mot de passe
+	 * @return un token JWT pour l'utilisateur
+	 * @throws InvalidCredentialsException si l'email ou le mot de passe est incorrect (401)
+	 */
 	public TokenOutput login(LoginInput input) {
 		try {
 			authenticationManager.authenticate(
@@ -62,6 +76,13 @@ public class AuthService {
 		return new TokenOutput(jwtService.generateToken(input.email()));
 	}
 
+	/**
+	 * Récupère l'utilisateur connecté à partir de l'email contenu dans son token.
+	 *
+	 * @param email l'email de l'utilisateur connecté
+	 * @return l'utilisateur, sans son mot de passe
+	 * @throws ResourceNotFoundException si l'utilisateur n'existe plus (404)
+	 */
 	public UserOutput me(String email) {
 		UserEntity user = userRepository.findByEmail(email)
 				.orElseThrow(() -> new ResourceNotFoundException("User not found"));

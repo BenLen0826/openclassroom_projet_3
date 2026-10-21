@@ -18,7 +18,14 @@ public class CustomUserDetailsService implements UserDetailsService {
 		this.userRepository = userRepository;
 	}
 
-	// Spring appelle l'identifiant "username" : dans notre application, c'est l'email
+	/**
+	 * Appelée par Spring Security lors du login pour charger l'utilisateur et son mot de passe haché.
+	 * Spring appelle l'identifiant "username" : dans notre application, c'est l'email.
+	 *
+	 * @param email l'email saisi au login
+	 * @return l'utilisateur au format attendu par Spring Security
+	 * @throws UsernameNotFoundException si aucun utilisateur n'a cet email
+	 */
 	@Override
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 		UserEntity user = userRepository.findByEmail(email)

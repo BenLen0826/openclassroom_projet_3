@@ -16,6 +16,13 @@ public class UserService {
 		this.userRepository = userRepository;
 	}
 
+	/**
+	 * Récupère un utilisateur à partir de son id.
+	 *
+	 * @param id l'id de l'utilisateur
+	 * @return l'utilisateur, sans son mot de passe
+	 * @throws ResourceNotFoundException si l'utilisateur n'existe pas (404)
+	 */
 	public UserOutput getUserById(Integer id) {
 		UserEntity user = userRepository.findById(id)
 				.orElseThrow(() -> new ResourceNotFoundException("User not found"));

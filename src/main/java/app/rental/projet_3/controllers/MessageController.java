@@ -25,6 +25,14 @@ public class MessageController {
 		this.messageService = messageService;
 	}
 
+	/**
+	 * Envoie un message au propriétaire d'une location.
+	 * L'expéditeur est l'utilisateur du token, pas le user_id reçu dans le JSON.
+	 *
+	 * @param input le message et l'id de la location
+	 * @param jwt le token de l'utilisateur connecté
+	 * @return un message de confirmation
+	 */
 	@PostMapping
 	@Operation(summary = "Envoyer un message au propriétaire d'une location")
 	public MessageResponse sendMessage(@Valid @RequestBody MessageInput input,

@@ -27,6 +27,14 @@ public class MessageService {
 		this.rentalRepository = rentalRepository;
 	}
 
+	/**
+	 * Enregistre un message envoyé par l'utilisateur connecté sur une location.
+	 *
+	 * @param input le message et l'id de la location
+	 * @param senderEmail l'email de l'utilisateur connecté, qui devient l'expéditeur
+	 * @return un message de confirmation
+	 * @throws ResourceNotFoundException si l'utilisateur ou la location n'existe pas (404)
+	 */
 	public MessageResponse sendMessage(MessageInput input, String senderEmail) {
 		UserEntity sender = userRepository.findByEmail(senderEmail)
 				.orElseThrow(() -> new ResourceNotFoundException("User not found"));

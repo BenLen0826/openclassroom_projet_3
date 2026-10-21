@@ -28,18 +28,36 @@ public class AuthController {
 		this.authService = authService;
 	}
 
+	/**
+	 * Crée un compte utilisateur, avec un mot de passe haché en base.
+	 *
+	 * @param input email, nom et mot de passe du nouvel utilisateur
+	 * @return un token JWT pour être connecté directement
+	 */
 	@PostMapping("/register")
 	@Operation(summary = "Créer un compte et récupérer un token JWT")
 	public TokenOutput register(@Valid @RequestBody RegisterInput input) {
 		return authService.register(input);
 	}
 
+	/**
+	 * Connecte un utilisateur à partir de son email et de son mot de passe.
+	 *
+	 * @param input email et mot de passe
+	 * @return un token JWT à envoyer ensuite dans l'en-tête Authorization
+	 */
 	@PostMapping("/login")
 	@Operation(summary = "Se connecter et récupérer un token JWT")
 	public TokenOutput login(@Valid @RequestBody LoginInput input) {
 		return authService.login(input);
 	}
 
+	/**
+	 * Récupère les informations de l'utilisateur connecté.
+	 *
+	 * @param jwt le token de l'utilisateur, qui contient son email
+	 * @return l'utilisateur connecté, sans son mot de passe
+	 */
 	@GetMapping("/me")
 	@Operation(summary = "Récupérer l'utilisateur connecté")
 	public UserOutput me(@AuthenticationPrincipal Jwt jwt) {

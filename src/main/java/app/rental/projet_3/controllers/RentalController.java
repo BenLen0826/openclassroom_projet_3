@@ -32,18 +32,36 @@ public class RentalController {
 		this.rentalService = rentalService;
 	}
 
+	/**
+	 * Récupère toutes les locations.
+	 *
+	 * @return la liste des locations, dans un objet { rentals: [...] }
+	 */
 	@GetMapping
 	@Operation(summary = "Récupérer toutes les locations")
 	public RentalListOutput getAllRentals() {
 		return new RentalListOutput(rentalService.getAllRentals());
 	}
 
+	/**
+	 * Récupère une location à partir de son id.
+	 *
+	 * @param id l'id de la location
+	 * @return la location (erreur 404 si elle n'existe pas)
+	 */
 	@GetMapping("/{id}")
 	@Operation(summary = "Récupérer une location par son ID")
 	public RentalOutput getRentalById(@PathVariable Integer id) {
 		return rentalService.getRentalById(id);
 	}
 
+	/**
+	 * Crée une location, dont le propriétaire est l'utilisateur connecté.
+	 *
+	 * @param input les champs du formulaire, dont l'image
+	 * @param jwt le token de l'utilisateur connecté
+	 * @return un message de confirmation
+	 */
 	@PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	@Operation(summary = "Créer une nouvelle location")
 	public MessageResponse createRental(@Valid @ModelAttribute RentalInput input,
@@ -51,6 +69,14 @@ public class RentalController {
 		return rentalService.createRental(input, jwt.getSubject());
 	}
 
+	/**
+	 * Modifie une location. Seul son propriétaire peut le faire (sinon erreur 403).
+	 *
+	 * @param id l'id de la location
+	 * @param input les nouveaux champs du formulaire (l'image ne peut pas être modifiée)
+	 * @param jwt le token de l'utilisateur connecté
+	 * @return un message de confirmation
+	 */
 	@PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	@Operation(summary = "Mettre à jour une location existante")
 	public MessageResponse updateRental(@PathVariable Integer id,
