@@ -9,7 +9,7 @@ public class AuthDto {
 	public record RegisterInput(
 			@NotBlank @Email @Size(max = 255) String email,
 			@NotBlank @Size(max = 255) String name,
-			// BCrypt refuse de hacher plus de 72 octets
+			// 72 caracteres max ici ; la limite de 72 octets de BCrypt est verifiee dans AuthService
 			@NotBlank @Size(max = 72) String password) {
 	}
 

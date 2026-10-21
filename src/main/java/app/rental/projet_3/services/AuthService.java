@@ -1,5 +1,7 @@
 package app.rental.projet_3.services;
 
+import java.nio.charset.StandardCharsets;
+
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
@@ -12,6 +14,7 @@ import app.rental.projet_3.dto.AuthDto.TokenOutput;
 import app.rental.projet_3.dto.UserDto.UserOutput;
 import app.rental.projet_3.entities.UserEntity;
 import app.rental.projet_3.exceptions.InvalidCredentialsException;
+import app.rental.projet_3.exceptions.InvalidPasswordException;
 import app.rental.projet_3.exceptions.ResourceAlreadyExistsException;
 import app.rental.projet_3.exceptions.ResourceNotFoundException;
 import app.rental.projet_3.repositories.UserRepository;
@@ -40,9 +43,15 @@ public class AuthService {
 	 *
 	 * @param input email, nom et mot de passe du nouvel utilisateur
 	 * @return un token JWT pour le nouvel utilisateur
+	 * @throws InvalidPasswordException si le mot de passe dépasse 72 octets (400)
 	 * @throws ResourceAlreadyExistsException si l'email est déjà utilisé (409)
 	 */
 	public TokenOutput register(RegisterInput input) {
+		// BCrypt refuse plus de 72 octets : un caractere accentue compte pour 2 octets, un emoji pour 4
+		if (input.password().getBytes(StandardCharsets.UTF_8).length > 72) {
+			throw new InvalidPasswordException("password : must not exceed 72 bytes");
+		}
+
 		if (userRepository.existsByEmail(input.email())) {
 			throw new ResourceAlreadyExistsException("Email already used");
 		}
