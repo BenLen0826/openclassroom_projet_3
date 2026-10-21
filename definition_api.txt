@@ -1,0 +1,111 @@
+DÉFINITION D'API
+
+
+************************************ AUTHENTIFICATION  ************************************
+
+
+URL                  : /api/auth/register
+Méthode              : POST
+Description          : Créer un compte utilisateur
+Params (path/query)  : -
+Body (JSON)          : { "name": "", "email": "", "password": "" }
+Status               : 200, 400, 409 (email déjà utilisé)
+Modèle attendu       : AuthSuccess
+Exemple de réponse   : { "token": "jwt" }
+                       {} (400)
+
+-----------------------------------------
+
+URL                  : /api/auth/login
+Méthode              : POST
+Description          : S'authentifier
+Params (path/query)  : -
+Body (JSON)          : { "email": "", "password": "" }
+Status               : 200, 401
+Modèle attendu       : AuthSuccess
+Exemple de réponse   : { "token": "jwt" } (200)
+                       { "message": "error" } (401)
+
+-----------------------------------------
+
+URL                  : /api/auth/me
+Méthode              : GET
+Description          : Récupérer l'utilisateur connecté
+Params (path/query)  : -
+Body (JSON)          : -
+Status               : 200, 401
+Modèle attendu       : User
+Exemple de réponse   : {"id": 0, "name": "", "email": "", "created_at": "2022/02/02", "updated_at": "2022/08/02"}
+
+
+
+************************************ RENTALS  ************************************
+
+
+URL                  : /api/rentals
+Méthode              : GET
+Description          : Récupérer la liste de tous les biens à louer
+Params (path/query)  : -
+Body (JSON)          : -
+Status               : 200, 401
+Modèle attendu       : Rental[]
+Exemple de réponse   : { "rentals": [ {"id": 0, "name": "", "surface": 0, "price": 0, "picture": "", "description": "", "owner_id": 0, "created_at": "2012/12/02", "updated_at": "2014/12/02"} ] }
+
+-----------------------------------------
+
+URL                  : /api/rentals/{id}
+Méthode              : GET
+Description          : Récupérer le détail d'un bien à louer
+Params (path/query)  : id (path)
+Body (JSON)          : -
+Status               : 200, 401, 404 (bien introuvable)
+Modèle attendu       : Rental
+Exemple de réponse   : {"id": 0, "name": "", "surface": 0, "price": 0, "picture": "", "description": "", "owner_id": 0, "created_at": "2012/12/02", "updated_at": "2014/12/02"}
+
+-----------------------------------------
+
+URL                  : /api/rentals
+Méthode              : POST
+Description          : Créer un nouveau bien à louer
+Params (path/query)  : -
+Body (multipart/form-data) : name, surface, price, picture, description
+Status               : 200, 400 (champ invalide ou image refusée), 401
+Modèle attendu       : RentalResponse
+Exemple de réponse   : { "message": "Rental created !" }
+
+-----------------------------------------
+
+URL                  : /api/rentals/{id}
+Méthode              : PUT
+Description          : Mettre à jour un bien à louer
+Params (path/query)  : id (path)
+Body (multipart/form-data) : name, surface, price, description (l'image n'est pas modifiable)
+Status               : 200, 400 (champ invalide), 401, 403 (pas le propriétaire), 404 (bien introuvable)
+Modèle attendu       : RentalResponse
+Exemple de réponse   : { "message": "Rental updated !" }
+
+
+************************************ MESSAGES  ************************************
+
+
+URL                  : /api/messages
+Méthode              : POST
+Description          : Envoyer un message au propriétaire d'un bien
+Params (path/query)  : -
+Body (JSON)          : { "rental_id": 0, "user_id": 0, "message": "" }
+Status               : 200, 400, 401, 404 (bien introuvable)
+Modèle attendu       : MessageResponse
+Exemple de réponse   : { "message": "Message send with success" }
+
+
+************************************ UTILISATEURS  ************************************
+
+
+URL                  : /api/user/{id}
+Méthode              : GET
+Description          : Récupérer les infos d'un utilisateur (ex : propriétaire d'un bien)
+Params (path/query)  : id (path)
+Body (JSON)          : -
+Status               : 200, 401, 404 (utilisateur introuvable)
+Modèle attendu       : User
+Exemple de réponse   : {"id": 0, "name": "", "email": "", "created_at": "2022/02/02", "updated_at": "2022/08/02"}

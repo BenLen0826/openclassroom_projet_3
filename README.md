@@ -22,7 +22,10 @@ Elle est utilisée par le front-end Angular fourni par OpenClassrooms (https://g
 Avant d'installer le projet, il faut avoir installé :
 
 - **Java 27** (JDK) : vérifier avec `java -version`
-- **MySQL 8** ou plus : vérifier avec `mysql --version`
+- **MySQL 8** ou plus : vérifier avec `mysql --version`.
+  Sous Windows, si la commande `mysql` est introuvable, ajouter le dossier `bin` de MySQL
+  (par exemple `C:\Program Files\MySQL\MySQL Server 8.0\bin`) à la variable d'environnement `PATH`,
+  puis ouvrir un nouveau terminal
 - **Git**, pour cloner le projet
 
 Maven n'est pas nécessaire : le projet contient le Maven Wrapper (`mvnw`), qui le télécharge automatiquement.
@@ -51,16 +54,19 @@ mysql -u root -p
 Puis exécuter les commandes suivantes, en remplaçant `mot_de_passe` par le mot de passe de votre choix :
 
 ```sql
-CREATE DATABASE chatop_db;
+SOURCE src/main/resources/sql/script.sql;
 CREATE USER 'chatop_user'@'localhost' IDENTIFIED BY 'mot_de_passe';
 GRANT SELECT, INSERT, UPDATE, DELETE ON chatop_db.* TO 'chatop_user'@'localhost';
-USE chatop_db;
-SOURCE src/main/resources/sql/script.sql;
 EXIT;
 ```
 
-Ces commandes créent la base `chatop_db`, un utilisateur `chatop_user` dédié à l'application,
-puis exécutent le script SQL fourni, qui crée les tables `USERS`, `RENTALS` et `MESSAGES`.
+La première commande exécute le script SQL fourni, qui crée la base `chatop_db`
+et les tables `USERS`, `RENTALS` et `MESSAGES`. Les deux suivantes créent l'utilisateur
+`chatop_user` dédié à l'application. Le mot de passe n'est volontairement pas dans le script,
+pour qu'aucun identifiant ne soit enregistré dans le dépôt.
+
+> Si MySQL n'est pas installé sur la même machine que l'application (serveur distant, Docker…),
+> remplacer `'localhost'` par `'%'` dans les commandes `CREATE USER` et `GRANT`.
 
 `chatop_user` reçoit seulement les droits nécessaires à l'application (principe du moindre privilège) :
 lire, ajouter, modifier et supprimer des lignes, uniquement dans la base `chatop_db`.
@@ -101,6 +107,9 @@ JWT_SECRET=une_cle_secrete_d_au_moins_32_caracteres
 
 `DB_HOST` et `DB_PORT` sont facultatifs : s'ils sont absents du `.env`, l'application utilise `localhost` et `3306`.
 Attention à ne pas les laisser vides (`DB_PORT=`) : une valeur vide ne remplace pas la valeur par défaut.
+
+> Le `.env` est lu comme un fichier `.properties` : le caractère `\` y sert d'échappement.
+> Éviter le `\` dans `DB_PASSWORD` et `JWT_SECRET`, ou l'écrire `\\`.
 
 ## Lancement
 

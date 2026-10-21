@@ -55,7 +55,7 @@ public class SecurityConfig {
 						.requestMatchers("/error").permitAll()
 						// Une balise <img> n'envoie pas le token : lecture seule des images sans connexion
 						.requestMatchers(HttpMethod.GET, ImageStorageService.URL_PATH + "**").permitAll()
-						.requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+						.requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
 						.anyRequest().authenticated())
 				.oauth2ResourceServer(oauth2 -> oauth2
 						.bearerTokenResolver(bearerTokenResolver())
@@ -64,6 +64,7 @@ public class SecurityConfig {
 	}
 
 	// Sur les routes publiques, le token est ignore : sinon un token expire bloquerait le login (401)
+	// A garder synchronise avec les permitAll ci-dessus
 	private BearerTokenResolver bearerTokenResolver() {
 		DefaultBearerTokenResolver defaultResolver = new DefaultBearerTokenResolver();
 

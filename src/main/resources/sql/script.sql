@@ -1,3 +1,7 @@
+CREATE DATABASE IF NOT EXISTS `chatop_db`;
+
+USE `chatop_db`;
+
 CREATE TABLE `USERS` (
   `id` integer PRIMARY KEY AUTO_INCREMENT,
   `email` varchar(255),
